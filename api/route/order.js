@@ -7,6 +7,7 @@ const Product = require('../models/products')
 route.get("/", (req, res, next) => {
 	Order.find()
 		.select('product quantity _id ')
+		.populate('product', 'name')
 		.exec()
 		.then(response => {
 			res.status(200).json({
@@ -68,11 +69,12 @@ route.post("/", (req, res, next) => {
 });
 route.get("/:orderId", (req, res, next) => {
 	Order.findById(req.params.orderId)
+		.populate('product')
 		.exec()
 		.then(response => {
-			if(!response){
+			if (!response) {
 				return res.status(404).json({
-					message : 'Order not found'
+					message: 'Order not found'
 				})
 			}
 			res.status(200).json({
